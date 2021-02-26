@@ -3,6 +3,7 @@ package gardenruntimetest
 import (
 	"strconv"
 
+	"github.com/concourse/concourse/atc/compression"
 	"github.com/concourse/concourse/atc/db"
 	"github.com/concourse/concourse/atc/runtime"
 	"github.com/concourse/concourse/atc/worker2"
@@ -51,6 +52,7 @@ func (w Worker) Build(pool worker2.Pool, dbWorker db.Worker) runtime.Worker {
 		&Baggageclaim{Volumes: w.Volumes},
 		pool.DB.ToGardenRuntimeDB(),
 		pool,
+		worker2.Streamer{Compression: compression.NewGzipCompression()},
 	)
 }
 
