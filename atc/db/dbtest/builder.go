@@ -27,7 +27,8 @@ func BaseWorker(name string) atc.Worker {
 	return atc.Worker{
 		Name: name,
 
-		Version: concourse.WorkerVersion,
+		Platform: "linux",
+		Version:  concourse.WorkerVersion,
 
 		GardenAddr:      unique("garden-addr"),
 		BaggageclaimURL: unique("baggageclaim-url"),
