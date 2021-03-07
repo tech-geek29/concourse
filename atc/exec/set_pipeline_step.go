@@ -17,7 +17,6 @@ import (
 	"github.com/concourse/concourse/atc/configvalidate"
 	"github.com/concourse/concourse/atc/creds"
 	"github.com/concourse/concourse/atc/db"
-	"github.com/concourse/concourse/atc/exec/artifact"
 	"github.com/concourse/concourse/atc/exec/build"
 	"github.com/concourse/concourse/atc/policy"
 	"github.com/concourse/concourse/atc/worker"
@@ -376,7 +375,7 @@ func (s setPipelineSource) retrieveFromArtifact(name, file string) (io.ReadClose
 	stream, err := s.artifactStreamer.StreamFileFromArtifact(lagerctx.NewContext(s.ctx, s.logger), art, file)
 	if err != nil {
 		if err == baggageclaim.ErrFileNotFound {
-			return nil, artifact.FileNotFoundError{
+			return nil, FileNotFoundError{
 				Name:     name,
 				FilePath: file,
 			}

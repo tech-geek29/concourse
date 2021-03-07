@@ -14,7 +14,6 @@ import (
 
 	"github.com/concourse/baggageclaim"
 	"github.com/concourse/concourse/atc"
-	"github.com/concourse/concourse/atc/exec/artifact"
 	"github.com/concourse/concourse/atc/exec/build"
 	"github.com/concourse/concourse/atc/worker"
 	"github.com/concourse/concourse/tracing"
@@ -140,7 +139,7 @@ func (step *LoadVarStep) fetchVars(
 	stream, err := step.artifactStreamer.StreamFileFromArtifact(lagerctx.NewContext(ctx, logger), art, filePath)
 	if err != nil {
 		if err == baggageclaim.ErrFileNotFound {
-			return nil, artifact.FileNotFoundError{
+			return nil, FileNotFoundError{
 				Name:     artifactName,
 				FilePath: filePath,
 			}
@@ -201,4 +200,16 @@ func (step *LoadVarStep) isValidFormat(format string) bool {
 		return true
 	}
 	return false
+}
+
+// FileNotFoundError is returned when the specified file path does not
+// exist within its artifact source.
+type FileNotFoundError struct {
+	Name     string
+	FilePath string
+}
+
+// Error returns a human-friendly error message.
+func (err FileNotFoundError) Error() string {
+	return fmt.Sprintf("file '%s' not found within artifact '%s'", err.FilePath, err.Name)
 }

@@ -16,10 +16,10 @@ import (
 	"github.com/concourse/concourse/atc/db/dbfakes"
 	"github.com/concourse/concourse/atc/exec"
 	"github.com/concourse/concourse/atc/exec/build"
-	"github.com/concourse/concourse/atc/exec/build/buildfakes"
 	"github.com/concourse/concourse/atc/exec/execfakes"
 	"github.com/concourse/concourse/atc/policy"
 	"github.com/concourse/concourse/atc/policy/policyfakes"
+	"github.com/concourse/concourse/atc/runtime/runtimetest"
 	"github.com/concourse/concourse/atc/worker/workerfakes"
 	"github.com/concourse/concourse/tracing"
 	"github.com/concourse/concourse/vars"
@@ -105,7 +105,6 @@ jobs:
 		spPlan             *atc.SetPipelinePlan
 		artifactRepository *build.Repository
 		state              *execfakes.FakeRunState
-		fakeSource         *buildfakes.FakeRegisterableArtifact
 
 		spStep  exec.Step
 		stepOk  bool
@@ -139,8 +138,7 @@ jobs:
 
 		state.GetStub = vars.StaticVariables{"source-param": "super-secret-source"}.Get
 
-		fakeSource = new(buildfakes.FakeRegisterableArtifact)
-		artifactRepository.RegisterArtifact("some-resource", fakeSource)
+		artifactRepository.RegisterArtifact("some-resource", runtimetest.NewVolume("some-handle"))
 
 		stdout = gbytes.NewBuffer()
 		stderr = gbytes.NewBuffer()
