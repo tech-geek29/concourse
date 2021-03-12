@@ -15,17 +15,16 @@ import (
 	"github.com/concourse/baggageclaim"
 	"github.com/concourse/concourse/atc"
 	"github.com/concourse/concourse/atc/exec/build"
-	"github.com/concourse/concourse/atc/worker"
 	"github.com/concourse/concourse/tracing"
 )
 
 // LoadVarStep loads a value from a file and sets it as a build-local var.
 type LoadVarStep struct {
-	planID           atc.PlanID
-	plan             atc.LoadVarPlan
-	metadata         StepMetadata
-	delegateFactory  BuildStepDelegateFactory
-	artifactStreamer worker.ArtifactStreamer
+	planID          atc.PlanID
+	plan            atc.LoadVarPlan
+	metadata        StepMetadata
+	delegateFactory BuildStepDelegateFactory
+	streamer        Streamer
 }
 
 func NewLoadVarStep(
@@ -33,14 +32,14 @@ func NewLoadVarStep(
 	plan atc.LoadVarPlan,
 	metadata StepMetadata,
 	delegateFactory BuildStepDelegateFactory,
-	artifactStreamer worker.ArtifactStreamer,
+	streamer Streamer,
 ) Step {
 	return &LoadVarStep{
-		planID:           planID,
-		plan:             plan,
-		metadata:         metadata,
-		delegateFactory:  delegateFactory,
-		artifactStreamer: artifactStreamer,
+		planID:          planID,
+		plan:            plan,
+		metadata:        metadata,
+		delegateFactory: delegateFactory,
+		streamer:        streamer,
 	}
 }
 
@@ -136,7 +135,7 @@ func (step *LoadVarStep) fetchVars(
 		}
 	}
 
-	stream, err := step.artifactStreamer.StreamFileFromArtifact(lagerctx.NewContext(ctx, logger), art, filePath)
+	stream, err := step.streamer.StreamFile(lagerctx.NewContext(ctx, logger), art, filePath)
 	if err != nil {
 		if err == baggageclaim.ErrFileNotFound {
 			return nil, FileNotFoundError{
