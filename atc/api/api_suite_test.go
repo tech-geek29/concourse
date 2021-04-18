@@ -18,6 +18,7 @@ import (
 	"github.com/concourse/concourse/atc/api"
 	"github.com/concourse/concourse/atc/api/accessor"
 	"github.com/concourse/concourse/atc/api/accessor/accessorfakes"
+	"github.com/concourse/concourse/atc/api/apifakes"
 	"github.com/concourse/concourse/atc/api/auth"
 	"github.com/concourse/concourse/atc/api/containerserver/containerserverfakes"
 	"github.com/concourse/concourse/atc/api/policychecker/policycheckerfakes"
@@ -28,7 +29,6 @@ import (
 	"github.com/concourse/concourse/atc/db/dbfakes"
 	"github.com/concourse/concourse/atc/gc/gcfakes"
 	"github.com/concourse/concourse/atc/policy"
-	"github.com/concourse/concourse/atc/worker/workerfakes"
 	"github.com/concourse/concourse/atc/wrappa"
 
 	. "github.com/onsi/ginkgo"
@@ -41,7 +41,7 @@ var (
 	externalURL = "https://example.com"
 	clusterName = "Test Cluster"
 
-	fakeWorkerPool          *workerfakes.FakePool
+	fakeWorkerPool          *apifakes.FakePool
 	fakeVolumeRepository    *dbfakes.FakeVolumeRepository
 	fakeContainerRepository *dbfakes.FakeContainerRepository
 	fakeDestroyer           *gcfakes.FakeDestroyer
@@ -132,7 +132,7 @@ var _ = BeforeEach(func() {
 	dbWorkerFactory = new(dbfakes.FakeWorkerFactory)
 	dbWorkerLifecycle = new(dbfakes.FakeWorkerLifecycle)
 
-	fakeWorkerPool = new(workerfakes.FakePool)
+	fakeWorkerPool = new(apifakes.FakePool)
 
 	fakeVolumeRepository = new(dbfakes.FakeVolumeRepository)
 	fakeContainerRepository = new(dbfakes.FakeContainerRepository)
