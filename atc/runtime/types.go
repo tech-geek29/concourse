@@ -159,7 +159,7 @@ type ProcessResult struct {
 }
 
 type Input struct {
-	VolumeHandle    string
+	Volume          Volume
 	DestinationPath string
 }
 
@@ -169,7 +169,7 @@ type OutputPaths map[string]string
 type ImageSpec struct {
 	ResourceType string
 	ImageURL     string
-	ImageVolume  string
+	ImageVolume  Volume
 	Privileged   bool
 }
 
