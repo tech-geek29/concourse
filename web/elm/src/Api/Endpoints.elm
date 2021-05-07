@@ -74,6 +74,7 @@ type ResourceVersionEndpoint
     | PinResourceVersion
     | EnableResourceVersion
     | DisableResourceVersion
+    | Causality
 
 
 type TeamEndpoint
@@ -295,6 +296,9 @@ resourceVersionEndpoint endpoint =
 
         DisableResourceVersion ->
             [ "disable" ]
+
+        Causality ->
+            [ "causality" ]
     , []
     )
 
