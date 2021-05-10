@@ -1182,8 +1182,9 @@ decodeVersionedResource =
 
 type alias CausalityResourceVersion =
     { resourceId : Int
+    , versionId : Int
     , resourceName : String
-    , version : String
+    , version : Version
     , inputTo : List CausalityBuild
     }
 
@@ -1206,8 +1207,9 @@ decodeCausalityResourceVersion : Json.Decode.Decoder CausalityResourceVersion
 decodeCausalityResourceVersion =
     Json.Decode.succeed CausalityResourceVersion
         |> andMap (Json.Decode.field "resource_id" Json.Decode.int)
+        |> andMap (Json.Decode.field "resource_version_id" Json.Decode.int)
         |> andMap (Json.Decode.field "resource_name" Json.Decode.string)
-        |> andMap (Json.Decode.field "version" Json.Decode.string)
+        |> andMap (Json.Decode.field "version" decodeVersion)
         |> andMap (defaultTo [] (Json.Decode.field "input_to" (Json.Decode.list decodeCausalityBuild)))
 
 
