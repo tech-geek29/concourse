@@ -111,6 +111,12 @@ pageBelowTopBar route =
                     , style "height" "100%"
                     , style "display" "flex"
                     ]
+
+                Routes.Causality _ ->
+                    [ style "box-sizing" "border-box"
+                    , style "height" "100%"
+                    , style "display" "flex"
+                    ]
            )
 
 

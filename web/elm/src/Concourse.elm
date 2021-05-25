@@ -14,6 +14,7 @@ module Concourse exposing
     , BuildStep(..)
     , CSRFToken
     , CausalityBuild(..)
+    , CausalityDirection(..)
     , CausalityResourceVersion
     , Cause
     , ClusterInfo
@@ -1180,13 +1181,17 @@ decodeVersionedResource =
 -- Causality
 
 
+type CausalityDirection
+    = Downstream
+    | Upstream
+
+
 type alias CausalityResourceVersion =
     { resourceId : Int
     , versionId : Int
     , resourceName : String
     , version : Version
-    , inputTo : List CausalityBuild
-    , outputOf : List CausalityBuild
+    , builds : List CausalityBuild
     }
 
 
@@ -1200,8 +1205,7 @@ type alias CausalityBuildFields =
     , name : String
     , jobId : Int
     , jobName : String
-    , inputs : List CausalityResourceVersion
-    , outputs : List CausalityResourceVersion
+    , resourceVersions : List CausalityResourceVersion
     }
 
 
@@ -1212,8 +1216,7 @@ decodeCausalityResourceVersion =
         |> andMap (Json.Decode.field "resource_version_id" Json.Decode.int)
         |> andMap (Json.Decode.field "resource_name" Json.Decode.string)
         |> andMap (Json.Decode.field "version" decodeVersion)
-        |> andMap (defaultTo [] (Json.Decode.field "input_to" (Json.Decode.list decodeCausalityBuild)))
-        |> andMap (defaultTo [] (Json.Decode.field "output_of" (Json.Decode.list decodeCausalityBuild)))
+        |> andMap (defaultTo [] (Json.Decode.field "builds" (Json.Decode.list decodeCausalityBuild)))
 
 
 decodeCausalityBuild : Json.Decode.Decoder CausalityBuild
@@ -1225,14 +1228,7 @@ decodeCausalityBuild =
         |> andMap (Json.Decode.field "job_name" Json.Decode.string)
         |> andMap
             (defaultTo []
-                (Json.Decode.field "inputs" <|
-                    Json.Decode.list <|
-                        Json.Decode.lazy (\_ -> decodeCausalityResourceVersion)
-                )
-            )
-        |> andMap
-            (defaultTo []
-                (Json.Decode.field "outputs" <|
+                (Json.Decode.field "resource_versions" <|
                     Json.Decode.list <|
                         Json.Decode.lazy (\_ -> decodeCausalityResourceVersion)
                 )
