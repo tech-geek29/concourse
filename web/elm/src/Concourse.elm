@@ -82,6 +82,7 @@ module Concourse exposing
     , isInstanceGroup
     , mapBuildPlan
     , pipelineId
+    , resourceId
     , retrieveCSRFToken
     , toInstanceGroupId
     , toPipelineId
@@ -1113,6 +1114,15 @@ type alias ResourceIdentifier =
     , pipelineName : String
     , pipelineInstanceVars : InstanceVars
     , resourceName : String
+    }
+
+
+resourceId : { r | teamName : String, pipelineName : String, pipelineInstanceVars : InstanceVars, resourceName : String } -> ResourceIdentifier
+resourceId { teamName, pipelineName, pipelineInstanceVars, resourceName } =
+    { teamName = teamName
+    , pipelineName = pipelineName
+    , pipelineInstanceVars = pipelineInstanceVars
+    , resourceName = resourceName
     }
 
 
