@@ -83,6 +83,7 @@ module Concourse exposing
     , mapBuildPlan
     , pipelineId
     , resourceId
+    , resourceIdFromVersionedResourceId
     , retrieveCSRFToken
     , toInstanceGroupId
     , toPipelineId
@@ -1117,12 +1118,12 @@ type alias ResourceIdentifier =
     }
 
 
-resourceId : { r | teamName : String, pipelineName : String, pipelineInstanceVars : InstanceVars, resourceName : String } -> ResourceIdentifier
-resourceId { teamName, pipelineName, pipelineInstanceVars, resourceName } =
+resourceId : { r | teamName : String, pipelineName : String, pipelineInstanceVars : InstanceVars, name : String } -> ResourceIdentifier
+resourceId { teamName, pipelineName, pipelineInstanceVars, name } =
     { teamName = teamName
     , pipelineName = pipelineName
     , pipelineInstanceVars = pipelineInstanceVars
-    , resourceName = resourceName
+    , resourceName = name
     }
 
 
@@ -1140,6 +1141,15 @@ type alias VersionedResourceIdentifier =
     , pipelineInstanceVars : InstanceVars
     , resourceName : String
     , versionID : Int
+    }
+
+
+resourceIdFromVersionedResourceId : { r | teamName : String, pipelineName : String, pipelineInstanceVars : InstanceVars, resourceName : String } -> ResourceIdentifier
+resourceIdFromVersionedResourceId { teamName, pipelineName, pipelineInstanceVars, resourceName } =
+    { teamName = teamName
+    , pipelineName = pipelineName
+    , pipelineInstanceVars = pipelineInstanceVars
+    , resourceName = resourceName
     }
 
 
