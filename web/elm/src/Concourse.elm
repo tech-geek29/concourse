@@ -91,7 +91,7 @@ module Concourse exposing
     )
 
 import Array exposing (Array)
-import Concourse.BuildStatus exposing (BuildStatus)
+import Concourse.BuildStatus exposing (BuildStatus, decodeBuildStatus, encodeBuildStatus)
 import Dict exposing (Dict)
 import Json.Decode
 import Json.Decode.Extra exposing (andMap)
@@ -214,7 +214,7 @@ encodeBuild build =
          , optionalField "pipeline_name" Json.Encode.string (build.job |> Maybe.map .pipelineName)
          , optionalField "pipeline_instance_vars" encodeInstanceVars (build.job |> Maybe.map .pipelineInstanceVars)
          , optionalField "job_name" Json.Encode.string (build.job |> Maybe.map .jobName)
-         , ( "status", build.status |> Concourse.BuildStatus.encodeBuildStatus ) |> Just
+         , ( "status", build.status |> encodeBuildStatus ) |> Just
          , optionalField "start_time" (secondsFromDate >> Json.Encode.int) build.duration.startedAt
          , optionalField "end_time" (secondsFromDate >> Json.Encode.int) build.duration.finishedAt
          , optionalField "reap_time" (secondsFromDate >> Json.Encode.int) build.reapTime
@@ -248,7 +248,7 @@ decodeBuild =
                     |> andMap (Json.Decode.field "job_name" Json.Decode.string)
                 )
             )
-        |> andMap (Json.Decode.field "status" Concourse.BuildStatus.decodeBuildStatus)
+        |> andMap (Json.Decode.field "status" decodeBuildStatus)
         |> andMap
             (Json.Decode.succeed BuildDuration
                 |> andMap (Json.Decode.maybe (Json.Decode.field "start_time" (Json.Decode.map dateFromSeconds Json.Decode.int)))
@@ -1223,6 +1223,7 @@ type CausalityBuild
 type alias CausalityBuildFields =
     { id : Int
     , name : String
+    , status : BuildStatus
     , jobId : Int
     , jobName : String
     , resourceVersions : List CausalityResourceVersion
@@ -1244,6 +1245,7 @@ decodeCausalityBuild =
     Json.Decode.succeed CausalityBuildFields
         |> andMap (Json.Decode.field "id" Json.Decode.int)
         |> andMap (Json.Decode.field "name" Json.Decode.string)
+        |> andMap (Json.Decode.field "status" decodeBuildStatus)
         |> andMap (Json.Decode.field "job_id" Json.Decode.int)
         |> andMap (Json.Decode.field "job_name" Json.Decode.string)
         |> andMap
