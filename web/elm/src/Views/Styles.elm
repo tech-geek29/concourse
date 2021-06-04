@@ -166,6 +166,7 @@ breadcrumbContainer : List (Html.Attribute msg)
 breadcrumbContainer =
     [ style "flex-grow" "1"
     , style "display" "flex"
+    , style "min-width" "0"
     ]
 
 
