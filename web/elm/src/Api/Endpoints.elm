@@ -69,7 +69,8 @@ type ResourceEndpoint
 
 
 type ResourceVersionEndpoint
-    = ResourceVersionInputTo
+    = BaseResourceVersion
+    | ResourceVersionInputTo
     | DownstreamCausality
     | ResourceVersionOutputOf
     | UpstreamCasuality
@@ -283,6 +284,9 @@ resourceEndpoint endpoint =
 resourceVersionEndpoint : ResourceVersionEndpoint -> RouteBuilder
 resourceVersionEndpoint endpoint =
     ( case endpoint of
+        BaseResourceVersion ->
+            []
+
         ResourceVersionInputTo ->
             [ "input_to" ]
 
