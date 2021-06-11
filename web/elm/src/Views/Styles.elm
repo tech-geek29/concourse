@@ -6,6 +6,7 @@ module Views.Styles exposing
     , clusterName
     , concourseLogo
     , defaultFont
+    , ellipsedText
     , fontFamilyDefault
     , fontWeightBold
     , fontWeightDefault
@@ -191,8 +192,8 @@ breadcrumbComponent { component, widthPx, heightPx } =
     ]
 
 
-breadcrumbItem : Bool -> List (Html.Attribute msg)
-breadcrumbItem clickable =
+breadcrumbItem : Bool -> Bool -> List (Html.Attribute msg)
+breadcrumbItem clickable lastItem =
     [ style "display" "inline-flex"
     , style "align-items" "center"
     , style "font-size" "18px"
@@ -206,6 +207,14 @@ breadcrumbItem clickable =
             "default"
     , style "color" Colors.white
     ]
+        ++ (if lastItem then
+                [ style "flex" "1"
+                , style "overflow" "hidden"
+                ]
+
+            else
+                []
+           )
 
 
 pauseToggle : String -> List (Html.Attribute msg)
@@ -288,4 +297,11 @@ instanceGroupBadge backgroundColor =
     , style "flex-shrink" "0"
     , style "align-items" "center"
     , style "justify-content" "center"
+    ]
+
+
+ellipsedText : List (Html.Attribute msg)
+ellipsedText =
+    [ style "overflow" "hidden"
+    , style "text-overflow" "ellipsis"
     ]
