@@ -41,7 +41,7 @@ type Callback
     | PausedToggled (Fetched ())
     | InputToFetched (Fetched ( VersionId, List Concourse.Build ))
     | OutputOfFetched (Fetched ( VersionId, List Concourse.Build ))
-    | CausalityFetched (Fetched ( Concourse.CausalityDirection, Maybe Concourse.CausalityResourceVersion ))
+    | CausalityFetched (Fetched ( Concourse.CausalityDirection, Maybe Concourse.Causality ))
     | VersionPinned (Fetched ())
     | VersionUnpinned (Fetched ())
     | VersionToggled VersionToggleAction VersionId (Fetched ())
